@@ -61,6 +61,8 @@ class MainActivity : ComponentActivity() {
                             "What furry friend brought you here today?",
                             Modifier.padding(8.dp)
                         )
+                        SectionHeader("Your favorites", Modifier.padding(8.dp))
+                        SectionHeader("Your friends", Modifier.padding(8.dp))
                     }
                 }
             }
