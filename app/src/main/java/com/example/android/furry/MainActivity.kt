@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
@@ -39,6 +40,8 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel: MyFriendsViewModel by viewModels()
+
         enableEdgeToEdge()
         setContent {
             FurryTheme {
@@ -75,6 +78,7 @@ class MainActivity : ComponentActivity() {
 
                             )
                         SectionHeader("Your friends", Modifier.padding(8.dp))
+                        MyFriendsList(viewModel)
                     }
                 }
             }
