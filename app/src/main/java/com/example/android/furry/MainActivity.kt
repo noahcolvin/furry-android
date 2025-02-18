@@ -26,6 +26,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,8 +45,16 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         val viewModel: MyFriendsViewModel by viewModels()
 
+
+
         enableEdgeToEdge()
         setContent {
+            val friends by viewModel.friendsList.collectAsState()
+
+            LaunchedEffect(Unit) {
+                viewModel.getMyFriends()
+            }
+
             FurryTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
                     TopAppBar(
@@ -78,7 +89,7 @@ class MainActivity : ComponentActivity() {
 
                             )
                         SectionHeader("Your friends", Modifier.padding(8.dp))
-                        MyFriendsList(viewModel)
+                        MyFriendsList(friends)
                     }
                 }
             }
