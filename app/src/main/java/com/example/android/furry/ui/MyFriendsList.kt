@@ -1,4 +1,4 @@
-package com.example.android.furry
+package com.example.android.furry.ui
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
