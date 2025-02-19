@@ -1,6 +1,7 @@
 package com.example.android.furry.api
 
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 interface ApiService {
     @GET("my-friends")
@@ -10,7 +11,11 @@ interface ApiService {
     suspend fun getMyFavoriteItems(): List<StoreItem>
 
     @GET("items")
-    suspend fun getStoreItems(): List<StoreItem>
+    suspend fun getStoreItems(
+        @Query("animal") animal: String?,
+        @Query("product") product: String?,
+        @Query("search") search: String?,
+    ): List<StoreItem>
 }
 
 data class StoreItem(

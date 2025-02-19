@@ -1,13 +1,27 @@
 package com.example.android.furry.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.api.StoreItem
@@ -19,18 +33,83 @@ fun StoreScreen(
     onStoreItemClicked: (StoreItem) -> Unit
 ) {
     val storeItems by viewModel.storeItemsList.collectAsState()
+    var selectedAnimal by remember { mutableStateOf("All") }
+    var selectedProduct by remember { mutableStateOf("All") }
 
-    if (!storeItems.isNullOrEmpty()) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = modifier
+    val animals = listOf("All", "Dog", "Cat", "Hamster", "Bird", "Fish")
+    val products = listOf("All", "Food", "Toy")
+
+    Column(modifier = modifier) {
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()
         ) {
-            items(storeItems!!.size) { index ->
-                StoreItem(
-                    item = storeItems!![index],
+            Dropdown(animals, "Animals", onSelectCategory = {
+                selectedAnimal = it
+                viewModel.getStoreItemsList(selectedAnimal, selectedProduct)
+            })
+            Dropdown(products, "Products", onSelectCategory = {
+                selectedProduct = it
+                viewModel.getStoreItemsList(selectedAnimal, selectedProduct)
+            })
+        }
+
+        if (!storeItems.isNullOrEmpty()) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2)
+            ) {
+                items(storeItems!!.size) { index ->
+                    StoreItem(
+                        item = storeItems!![index],
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable { onStoreItemClicked(storeItems!![index]) })
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun Dropdown(categories: List<String>, label: String, onSelectCategory: (String) -> Unit = {}) {
+    var expanded by remember { mutableStateOf(false) }
+    var selectedCategory by remember { mutableStateOf("All") }
+
+    val width = LocalConfiguration.current.screenWidthDp.dp / 2f - 20.dp
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier = Modifier.width(width)
+    ) {
+        OutlinedTextField(
+            value = selectedCategory,
+            onValueChange = { },
+            readOnly = true,
+            label = { Text(label) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .clickable { expanded = true }
+        )
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            categories.forEach { category ->
+                Text(
+                    text = category,
                     modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            onSelectCategory(category)
+                            selectedCategory = category
+                            expanded = false
+                        }
                         .padding(8.dp)
-                        .clickable { onStoreItemClicked(storeItems!![index]) })
+                )
             }
         }
     }

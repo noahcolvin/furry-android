@@ -19,13 +19,18 @@ class StoreScreenViewModel : ViewModel() {
         getStoreItemsList()
     }
 
-    private fun getStoreItemsList() {
+    fun getStoreItemsList(
+        animal: String? = null,
+        product: String? = null,
+        search: String? = null
+    ) {
         viewModelScope.launch {
             try {
-                val response = _apiService.getStoreItems()
-                if (response.isNotEmpty()) {
-                    _storeItemsList.value = response
-                }
+                val animalParam = if (animal == "All") null else animal
+                val productParam = if (product == "All") null else product
+
+                val response = _apiService.getStoreItems(animalParam, productParam, search)
+                _storeItemsList.value = response
             } catch (e: Exception) {
                 // Handle errors here
                 val x = e
