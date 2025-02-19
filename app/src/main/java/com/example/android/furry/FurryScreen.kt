@@ -32,6 +32,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.furry.ui.DashboardScreen
 import com.example.android.furry.ui.FurryViewModel
+import com.example.android.furry.ui.MyFriendScreen
 
 enum class FurryScreen(@StringRes val title: Int) {
     Start(title = R.string.app_name),
@@ -128,6 +129,14 @@ fun FurryApp(
         ) {
             composable(route = FurryScreen.Start.name) {
                 DashboardScreen(
+                    onFriendClicked = { navController.navigate(FurryScreen.Friend.name) },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
+            }
+            composable(route = FurryScreen.Friend.name) {
+                MyFriendScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
