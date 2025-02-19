@@ -19,7 +19,7 @@ import com.example.android.furry.api.MyFriend
 
 @Composable
 fun MyFriendScreen(friend: MyFriend, modifier: Modifier = Modifier) {
-    Column(modifier = Modifier.padding(8.dp)) {
+    Column(modifier = modifier) {
         AsyncImage(
             model = friend.image,
             contentDescription = friend.name,

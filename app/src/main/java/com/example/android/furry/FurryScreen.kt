@@ -32,6 +32,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.furry.ui.DashboardScreen
+import com.example.android.furry.ui.ItemDetailScreen
 import com.example.android.furry.ui.MyFriendScreen
 
 enum class FurryScreen(@StringRes val title: Int) {
@@ -52,9 +53,6 @@ fun FurryAppBar(
 ) {
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Color.White,
-        ),
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {
@@ -133,6 +131,10 @@ fun FurryApp(
                         viewModel.setSelectedFriend(it)
                         navController.navigate(FurryScreen.Friend.name)
                     },
+                    onStoreItemClicked = {
+                        viewModel.setSelectedStoreItem(it)
+                        navController.navigate(FurryScreen.ItemDetail.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
@@ -143,6 +145,17 @@ fun FurryApp(
                 if (friend != null) {
                     MyFriendScreen(
                         friend,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    )
+                }
+            }
+            composable(route = FurryScreen.ItemDetail.name) {
+                val storeItem = viewModel.selectedStoreItem
+                if (storeItem != null) {
+                    ItemDetailScreen(
+                        storeItem,
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(8.dp)

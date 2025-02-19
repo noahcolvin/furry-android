@@ -25,10 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.R
 import com.example.android.furry.api.MyFriend
+import com.example.android.furry.api.StoreItem
 
 @Composable
 fun DashboardScreen(
     onFriendClicked: (MyFriend) -> Unit,
+    onStoreItemClicked: (StoreItem) -> Unit,
     viewModel: DashboardScreenViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -44,7 +46,7 @@ fun DashboardScreen(
         )
         FurryFriendList()
         SectionHeader("Your favorites", Modifier.padding(8.dp))
-        MyFavoriteItemsList(favorites)
+        MyFavoriteItemsList(favorites, onStoreItemClicked)
         Image(
             painter = painterResource(id = R.drawable.pet_insurance),
             contentDescription = "AD for pet insurance",

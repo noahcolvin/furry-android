@@ -1,10 +1,12 @@
 package com.example.android.furry.ui
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -21,12 +23,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.example.android.furry.api.MyFriend
 import com.example.android.furry.api.StoreItem
 import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 
 @Composable
-fun MyFavoriteItemsList(storeItems: List<StoreItem>?) {
+fun MyFavoriteItemsList(storeItems: List<StoreItem>?, onStoreItemClicked: (StoreItem) -> Unit) {
     val scrollState = rememberScrollState()
 
     Row(
@@ -36,15 +39,15 @@ fun MyFavoriteItemsList(storeItems: List<StoreItem>?) {
             .padding(8.dp)
     ) {
         storeItems?.forEach { storeItem ->
-            StoreItem(storeItem)
+            StoreItem(storeItem, Modifier.clickable { onStoreItemClicked(storeItem) })
         }
     }
 }
 
 @Composable
-fun StoreItem(item: StoreItem) {
+fun StoreItem(item: StoreItem, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .clip(RoundedCornerShape(10.dp))
             .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
             .width(175.dp),
@@ -79,7 +82,7 @@ fun StoreItem(item: StoreItem) {
             lineHeight = 16.sp,
             overflow = TextOverflow.Ellipsis,
             maxLines = 3,
-            modifier = Modifier.padding(start = 8.dp, top = 8.dp)
+            modifier = Modifier.padding(start = 8.dp, top = 8.dp).height(48.dp)
         )
         Text(
             text = "$${item.price}",
@@ -159,5 +162,5 @@ fun MyFavoriteItemsListPreview() {
             categories = listOf("Hamster", "Pet")
         )
     )
-    MyFavoriteItemsList(storeItems = sampleStoreItems)
+    MyFavoriteItemsList(storeItems = sampleStoreItems, onStoreItemClicked = {})
 }
