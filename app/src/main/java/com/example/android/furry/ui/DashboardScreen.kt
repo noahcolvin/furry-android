@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -29,17 +29,18 @@ import com.example.android.furry.api.StoreItem
 
 @Composable
 fun DashboardScreen(
+    modifier: Modifier = Modifier,
     onFriendClicked: (MyFriend) -> Unit,
     onStoreItemClicked: (StoreItem) -> Unit,
+    onStoreAreaClick: (FurryScreens) -> Unit,
     viewModel: DashboardScreenViewModel = viewModel(),
-    modifier: Modifier = Modifier
 ) {
     val friends by viewModel.friendsList.collectAsState()
     val favorites by viewModel.favoritesList.collectAsState()
 
-    Column(modifier = Modifier) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         SectionHeader("Welcome back!", Modifier.padding(8.dp))
-        StoreAreaButtonList()
+        StoreAreaButtonList(onButtonClick = onStoreAreaClick)
         SectionHeader(
             "What furry friend brought you here today?",
             Modifier.padding(8.dp)
@@ -50,7 +51,7 @@ fun DashboardScreen(
         Image(
             painter = painterResource(id = R.drawable.pet_insurance),
             contentDescription = "AD for pet insurance",
-            )
+        )
         SectionHeader("Your friends", Modifier.padding(8.dp))
         MyFriendsList(friends, onFriendClicked)
     }
@@ -107,16 +108,16 @@ fun FurryFriendList() {
 }
 
 @Composable
-fun StoreAreaButtonList() {
+fun StoreAreaButtonList(onButtonClick: (FurryScreens) -> Unit) {
     val scrollState = rememberScrollState()
 
-    val buttonLabels = listOf(
-        "Shop",
-        "Today's Specials",
-        "Grooming",
-        "Locations",
-        "Rescue",
-        "Vet Finder"
+    val buttonLabels = mapOf(
+        "Shop" to FurryScreens.Store,
+        "Today's Specials" to FurryScreens.Start,
+        "Grooming" to FurryScreens.Start,
+        "Locations" to FurryScreens.Start,
+        "Rescue" to FurryScreens.Start,
+        "Vet Finder" to FurryScreens.Start
     )
 
     Row(
@@ -126,10 +127,10 @@ fun StoreAreaButtonList() {
     ) {
         buttonLabels.forEach { label ->
             OutlinedButton(
-                onClick = { /* Handle button click */ },
+                onClick = { onButtonClick(label.value) },
                 modifier = Modifier.padding(end = 8.dp)
             ) {
-                Text(text = label)
+                Text(text = label.key)
             }
         }
     }
