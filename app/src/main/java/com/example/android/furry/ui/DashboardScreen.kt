@@ -24,9 +24,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.R
+import com.example.android.furry.api.MyFriend
 
 @Composable
 fun DashboardScreen(
+    onFriendClicked: (MyFriend) -> Unit,
     viewModel: DashboardScreenViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -53,7 +55,7 @@ fun DashboardScreen(
             contentDescription = "AD for pet insurance",
             )
         SectionHeader("Your friends", Modifier.padding(8.dp))
-        MyFriendsList(friends)
+        MyFriendsList(friends, onFriendClicked)
     }
 }
 

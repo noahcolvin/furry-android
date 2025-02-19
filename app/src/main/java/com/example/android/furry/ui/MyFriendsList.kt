@@ -1,6 +1,7 @@
 package com.example.android.furry.ui
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,7 +23,7 @@ import coil3.compose.AsyncImage
 import com.example.android.furry.api.MyFriend
 
 @Composable
-fun MyFriendsList(friends: List<MyFriend>?) {
+fun MyFriendsList(friends: List<MyFriend>?, onFriendClicked: (MyFriend) -> Unit) {
     val scrollState = rememberScrollState()
 
     Row(
@@ -35,7 +36,8 @@ fun MyFriendsList(friends: List<MyFriend>?) {
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .clip(RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp)),
+                    .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
+                    .clickable { onFriendClicked(friend) },
                 horizontalAlignment = Alignment.Start
             ) {
                 AsyncImage(
@@ -72,5 +74,5 @@ fun MyFriendsListPreview() {
         MyFriend(name = "Max", image = "https://picsum.photos/id/237/200/300"),
         MyFriend(name = "Bella", image = "https://picsum.photos/id/237/200/300")
     )
-    MyFriendsList(friends = sampleFriends)
+    MyFriendsList(friends = sampleFriends, onFriendClicked = {})
 }
