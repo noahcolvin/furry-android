@@ -1,4 +1,4 @@
-package com.example.android.furry
+package com.example.android.furry.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel : ViewModel() {
+class DashboardScreenViewModel : ViewModel() {
     private val _apiService = RetrofitInstance.api
 
     private val _friendsList = MutableStateFlow<List<MyFriend>?>(null)
-    val friendsList: StateFlow<List<MyFriend>?> get() = _friendsList.asStateFlow()
     private val _favoritesList = MutableStateFlow<List<StoreItem>?>(null)
+    val friendsList: StateFlow<List<MyFriend>?> get() = _friendsList.asStateFlow()
     val favoritesList: StateFlow<List<StoreItem>?> get() = _favoritesList.asStateFlow()
 
     fun getMyFriends() {
