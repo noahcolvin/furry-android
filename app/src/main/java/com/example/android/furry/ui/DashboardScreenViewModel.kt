@@ -18,7 +18,12 @@ class DashboardScreenViewModel : ViewModel() {
     val friendsList: StateFlow<List<MyFriend>?> get() = _friendsList.asStateFlow()
     val favoritesList: StateFlow<List<StoreItem>?> get() = _favoritesList.asStateFlow()
 
-    fun getMyFriends() {
+    init {
+        getMyFriends()
+        getMyFavorites()
+    }
+
+    private fun getMyFriends() {
         viewModelScope.launch {
             try {
                 val response = _apiService.getMyFriends()
@@ -32,7 +37,7 @@ class DashboardScreenViewModel : ViewModel() {
         }
     }
 
-    fun getMyFavorites() {
+    private fun getMyFavorites() {
         viewModelScope.launch {
             try {
                 val response = _apiService.getMyFavoriteItems()
