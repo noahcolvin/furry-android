@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.furry.ui.DashboardScreen
-import com.example.android.furry.ui.FurryViewModel
 import com.example.android.furry.ui.MyFriendScreen
 
 enum class FurryScreen(@StringRes val title: Int) {
@@ -53,7 +53,7 @@ fun FurryAppBar(
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = Color.White,
         ),
         modifier = modifier,
         navigationIcon = {
@@ -71,7 +71,7 @@ fun FurryAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageAppBar(){
+fun ImageAppBar() {
     TopAppBar(
         title = {
             Image(
@@ -81,7 +81,7 @@ fun ImageAppBar(){
             )
         },
         actions = {
-            IconButton(onClick = {  }) {
+            IconButton(onClick = { }) {
                 Icon(
                     imageVector = Icons.Filled.ShoppingCart,
                     contentDescription = "Localized description"
@@ -92,7 +92,7 @@ fun ImageAppBar(){
 
 @Composable
 fun FurryApp(
-    viewModel: FurryViewModel = viewModel(),
+    viewModel: FurryScreenViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     // Get current back stack entry
@@ -129,18 +129,25 @@ fun FurryApp(
         ) {
             composable(route = FurryScreen.Start.name) {
                 DashboardScreen(
-                    onFriendClicked = { navController.navigate(FurryScreen.Friend.name) },
+                    onFriendClicked = {
+                        viewModel.setSelectedFriend(it)
+                        navController.navigate(FurryScreen.Friend.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
                 )
             }
             composable(route = FurryScreen.Friend.name) {
-                MyFriendScreen(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                )
+                val friend = viewModel.selectedFriend
+                if (friend != null) {
+                    MyFriendScreen(
+                        friend,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(8.dp)
+                    )
+                }
             }
             /*composable(route = FurryScreen.Flavor.name) {
                 val context = LocalContext.current

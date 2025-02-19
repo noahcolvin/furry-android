@@ -35,11 +35,6 @@ fun DashboardScreen(
     val friends by viewModel.friendsList.collectAsState()
     val favorites by viewModel.favoritesList.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.getMyFriends()
-        viewModel.getMyFavorites()
-    }
-
     Column(modifier = Modifier) {
         SectionHeader("Welcome back!", Modifier.padding(8.dp))
         StoreAreaButtonList()
