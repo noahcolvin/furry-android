@@ -1,27 +1,21 @@
 package com.example.android.furry
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -32,21 +26,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.android.furry.ui.DashboardScreen
+import com.example.android.furry.ui.FurryScreens
 import com.example.android.furry.ui.ItemDetailScreen
 import com.example.android.furry.ui.MyFriendScreen
-
-enum class FurryScreen(@StringRes val title: Int) {
-    Start(title = R.string.app_name),
-    Friend(title = R.string.friend),
-    ItemDetail(title = R.string.item_detail),
-    Store(title = R.string.store),
-    Cart(title = R.string.cart),
-}
+import com.example.android.furry.ui.StoreScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FurryAppBar(
-    currentScreen: FurryScreen,
+    currentScreen: FurryScreens,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
@@ -96,14 +84,14 @@ fun FurryApp(
     // Get current back stack entry
     val backStackEntry by navController.currentBackStackEntryAsState()
     // Get the name of the current screen
-    val currentScreen = FurryScreen.valueOf(
-        backStackEntry?.destination?.route ?: FurryScreen.Start.name
+    val currentScreen = FurryScreens.valueOf(
+        backStackEntry?.destination?.route ?: FurryScreens.Start.name
     )
 
     Scaffold(
         topBar = {
             currentScreen.let {
-                if (it == FurryScreen.Start) {
+                if (it == FurryScreens.Start) {
                     ImageAppBar()
                 } else {
                     FurryAppBar(
@@ -119,28 +107,29 @@ fun FurryApp(
 
         NavHost(
             navController = navController,
-            startDestination = FurryScreen.Start.name,
+            startDestination = FurryScreens.Start.name,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                //.verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
-            composable(route = FurryScreen.Start.name) {
+            composable(route = FurryScreens.Start.name) {
                 DashboardScreen(
                     onFriendClicked = {
                         viewModel.setSelectedFriend(it)
-                        navController.navigate(FurryScreen.Friend.name)
+                        navController.navigate(FurryScreens.Friend.name)
                     },
                     onStoreItemClicked = {
                         viewModel.setSelectedStoreItem(it)
-                        navController.navigate(FurryScreen.ItemDetail.name)
+                        navController.navigate(FurryScreens.ItemDetail.name)
                     },
+                    onStoreAreaClick = { navController.navigate(it.name) },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
                 )
             }
-            composable(route = FurryScreen.Friend.name) {
+            composable(route = FurryScreens.Friend.name) {
                 val friend = viewModel.selectedFriend
                 if (friend != null) {
                     MyFriendScreen(
@@ -151,7 +140,7 @@ fun FurryApp(
                     )
                 }
             }
-            composable(route = FurryScreen.ItemDetail.name) {
+            composable(route = FurryScreens.ItemDetail.name) {
                 val storeItem = viewModel.selectedStoreItem
                 if (storeItem != null) {
                     ItemDetailScreen(
@@ -161,6 +150,17 @@ fun FurryApp(
                             .padding(8.dp)
                     )
                 }
+            }
+            composable(route = FurryScreens.Store.name) {
+                StoreScreen(
+                    onStoreItemClicked = {
+                        viewModel.setSelectedStoreItem(it)
+                        navController.navigate(FurryScreens.ItemDetail.name)
+                    },
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
+                )
             }
             /*composable(route = FurryScreen.Flavor.name) {
                 val context = LocalContext.current

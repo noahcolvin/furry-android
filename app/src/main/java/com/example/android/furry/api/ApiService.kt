@@ -8,6 +8,9 @@ interface ApiService {
 
     @GET("my-favorite-items")
     suspend fun getMyFavoriteItems(): List<StoreItem>
+
+    @GET("items")
+    suspend fun getStoreItems(): List<StoreItem>
 }
 
 data class StoreItem(
