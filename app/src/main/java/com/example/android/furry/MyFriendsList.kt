@@ -46,8 +46,12 @@ fun MyFriendsList(friends: List<MyFriend>?) {
                     modifier = Modifier
                         .width(200.dp)
                         .height(150.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .border(1.dp, Color.LightGray, RoundedCornerShape(10.dp))
+                        .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+                        .border(
+                            1.dp,
+                            Color.LightGray,
+                            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                        )
                 )
                 Text(
                     text = friend.name,

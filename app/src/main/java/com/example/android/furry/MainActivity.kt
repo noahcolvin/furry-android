@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -43,16 +44,18 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel: MyFriendsViewModel by viewModels()
-
-
+        val viewModel: MainActivityViewModel by viewModels()
 
         enableEdgeToEdge()
         setContent {
             val friends by viewModel.friendsList.collectAsState()
+            val favorites by viewModel.favoritesList.collectAsState()
+
+            val scrollState = rememberScrollState()
 
             LaunchedEffect(Unit) {
                 viewModel.getMyFriends()
+                viewModel.getMyFavorites()
             }
 
             FurryTheme {
@@ -74,7 +77,10 @@ class MainActivity : ComponentActivity() {
                             }
                         })
                 }) { innerPadding ->
-                    Column(modifier = Modifier.padding(innerPadding)) {
+                    Column(modifier = Modifier
+                        .padding(innerPadding)
+                        .verticalScroll(scrollState)) {
+
                         SectionHeader("Welcome back!", Modifier.padding(8.dp))
                         StoreAreaButtonList()
                         SectionHeader(
@@ -83,6 +89,7 @@ class MainActivity : ComponentActivity() {
                         )
                         FurryFriendList()
                         SectionHeader("Your favorites", Modifier.padding(8.dp))
+                        MyFavoriteItemsList(favorites)
                         Image(
                             painter = painterResource(id = R.drawable.pet_insurance),
                             contentDescription = "AD for pet insurance",
