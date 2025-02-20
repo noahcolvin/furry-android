@@ -17,6 +17,13 @@ class FurryScreenViewModel : ViewModel() {
     private var _selectedStoreItem: StoreItem? = null
     val selectedStoreItem: StoreItem? get() = _selectedStoreItem
 
+    private var _cartItems = MutableStateFlow<List<StoreItem>>(emptyList())
+    val cartItems: StateFlow<List<StoreItem>> get() = _cartItems.asStateFlow()
+
+    fun addToCart(storeItem: StoreItem) {
+        _cartItems.value += storeItem
+    }
+
     fun setSelectedFriend(friend: MyFriend) {
         _selectedFriend = friend
     }

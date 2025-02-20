@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -14,8 +16,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,12 +40,14 @@ import com.example.android.furry.ui.StoreScreen
 fun FurryAppBar(
     currentScreen: FurryScreens,
     canNavigateBack: Boolean,
+    itemCount: Int,
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         modifier = modifier,
+        actions = { ShoppingCartIcon(itemCount) },
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
@@ -57,7 +63,7 @@ fun FurryAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageAppBar() {
+fun ImageAppBar(itemCount: Int) {
     TopAppBar(
         title = {
             Image(
@@ -67,13 +73,32 @@ fun ImageAppBar() {
             )
         },
         actions = {
-            IconButton(onClick = { }) {
-                Icon(
-                    imageVector = Icons.Filled.ShoppingCart,
-                    contentDescription = "Localized description"
-                )
-            }
+            ShoppingCartIcon(itemCount)
         })
+}
+
+@Composable
+fun ShoppingCartIcon(itemCount: Int) {
+    BadgedBox(
+        badge = {
+            if (itemCount > 0) {
+                Badge(
+                    containerColor = Color.Red,
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(end = 4.dp)
+                ) {
+                    Text("$itemCount")
+                }
+            }
+        }
+    ) {
+        IconButton(onClick = { }) {
+            Icon(
+                imageVector = Icons.Filled.ShoppingCart,
+                contentDescription = "Localized description",
+            )
+        }
+    }
 }
 
 @Composable
@@ -88,15 +113,18 @@ fun FurryApp(
         backStackEntry?.destination?.route ?: FurryScreens.Start.name
     )
 
+    val cartItems by viewModel.cartItems.collectAsState()
+
     Scaffold(
         topBar = {
             currentScreen.let {
                 if (it == FurryScreens.Start) {
-                    ImageAppBar()
+                    ImageAppBar(cartItems.size)
                 } else {
                     FurryAppBar(
                         currentScreen = currentScreen,
                         canNavigateBack = navController.previousBackStackEntry != null,
+                        itemCount = cartItems.size,
                         navigateUp = { navController.navigateUp() }
                     )
                 }
@@ -145,6 +173,7 @@ fun FurryApp(
                 if (storeItem != null) {
                     ItemDetailScreen(
                         storeItem,
+                        onAddToCart = { viewModel.addToCart(it) },
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(8.dp)
