@@ -153,7 +153,11 @@ fun FurryApp(
                         viewModel.setSelectedStoreItem(it)
                         navController.navigate(FurryScreens.ItemDetail.name)
                     },
-                    onStoreAreaClick = { navController.navigate(it.name) },
+                    onStoreAreaClick = {
+                        if (navController.currentBackStackEntry?.destination?.route != it.name) {
+                            navController.navigate(it.name)
+                        }
+                    },
                     onAnimalClicked = {
                         viewModel.setStoreAnimalFilter(it)
                         navController.navigate(FurryScreens.Store.name)
@@ -206,7 +210,9 @@ fun FurryApp(
                     onRemoveItem = { viewModel.removeFromCart(it) },
                     onCompleteOrder = {
                         viewModel.completeOrder()
-                        navController.navigate(FurryScreens.Start.name)
+                        navController.navigate(FurryScreens.Start.name) {
+                            popUpTo(FurryScreens.Start.name) { inclusive = true }
+                        }
                     },
                     modifier = Modifier
                         .fillMaxSize()
