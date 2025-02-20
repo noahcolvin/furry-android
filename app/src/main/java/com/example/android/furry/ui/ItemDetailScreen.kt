@@ -22,7 +22,7 @@ import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 
 @Composable
-fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier) {
+fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier, onAddToCart: (StoreItem) -> Unit) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Text(
             text = storeItem.name,
@@ -65,7 +65,7 @@ fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(8.dp)
         )
         Button(
-            onClick = { /* Handle add to cart action */ },
+            onClick = { onAddToCart(storeItem) },
             colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
             modifier = Modifier.padding(8.dp)
         ) {
