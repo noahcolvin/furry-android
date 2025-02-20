@@ -2,6 +2,7 @@ package com.example.android.furry.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,7 @@ fun DashboardScreen(
     onFriendClicked: (MyFriend) -> Unit,
     onStoreItemClicked: (StoreItem) -> Unit,
     onStoreAreaClick: (FurryScreens) -> Unit,
+    onAnimalClicked: (String) -> Unit,
     viewModel: DashboardScreenViewModel = viewModel(),
 ) {
     val friends by viewModel.friendsList.collectAsState()
@@ -45,7 +47,7 @@ fun DashboardScreen(
             "What furry friend brought you here today?",
             Modifier.padding(8.dp)
         )
-        FurryFriendList()
+        AnimalList(onAnimalClicked)
         SectionHeader("Your favorites", Modifier.padding(8.dp))
         MyFavoriteItemsList(favorites, onStoreItemClicked)
         Image(
@@ -67,7 +69,7 @@ fun SectionHeader(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun FurryFriendList() {
+fun AnimalList(onClick: (String) -> Unit) {
     val scrollState = rememberScrollState()
 
     val animals = mapOf(
@@ -86,7 +88,7 @@ fun FurryFriendList() {
     ) {
         animals.forEach { (name, imageRes) ->
             Column(
-                modifier = Modifier.padding(end = 8.dp),
+                modifier = Modifier.padding(end = 8.dp).clickable { onClick(name) },
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(

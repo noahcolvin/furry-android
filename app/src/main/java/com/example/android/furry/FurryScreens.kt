@@ -154,6 +154,10 @@ fun FurryApp(
                         navController.navigate(FurryScreens.ItemDetail.name)
                     },
                     onStoreAreaClick = { navController.navigate(it.name) },
+                    onAnimalClicked = {
+                        viewModel.setStoreAnimalFilter(it)
+                        navController.navigate(FurryScreens.Store.name)
+                    },
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(8.dp)
@@ -183,7 +187,9 @@ fun FurryApp(
                 }
             }
             composable(route = FurryScreens.Store.name) {
+                val animalFilter = viewModel.storeAnimalFilter
                 StoreScreen(
+                    animalFilter = animalFilter,
                     onStoreItemClicked = {
                         viewModel.setSelectedStoreItem(it)
                         navController.navigate(FurryScreens.ItemDetail.name)
