@@ -34,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.api.StoreItem
 
@@ -103,19 +104,27 @@ fun StoreScreen(
                 .fillMaxWidth()
 
         ) {
-            LazyColumn {
-                items(storeItems ?: listOf()) { item ->
-                    Text(
-                        text = item.name,
-                        modifier = Modifier
-                            .padding(
-                                start = 8.dp,
-                                top = 4.dp,
-                                end = 8.dp,
-                                bottom = 4.dp
-                            )
-                            .clickable { onStoreItemClicked(item) }
-                    )
+            if (storeItems.isNullOrEmpty()) {
+                Text(
+                    text = "Sorry, no items available",
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(8.dp)
+                )
+            } else {
+                LazyColumn {
+                    items(storeItems!!) { item ->
+                        Text(
+                            text = item.name,
+                            modifier = Modifier
+                                .padding(
+                                    start = 8.dp,
+                                    top = 4.dp,
+                                    end = 8.dp,
+                                    bottom = 4.dp
+                                )
+                                .clickable { onStoreItemClicked(item) }
+                        )
+                    }
                 }
             }
         }
@@ -133,7 +142,13 @@ fun StoreScreen(
             })
         }
 
-        if (!storeItems.isNullOrEmpty()) {
+        if (storeItems.isNullOrEmpty()) {
+            Text(
+                text = "Sorry, no items available",
+                fontSize = 14.sp,
+                modifier = Modifier.padding(8.dp)
+            )
+        } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2)
             ) {

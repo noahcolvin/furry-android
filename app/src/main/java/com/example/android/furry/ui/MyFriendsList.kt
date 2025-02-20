@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.android.furry.api.MyFriend
 
@@ -26,40 +27,48 @@ import com.example.android.furry.api.MyFriend
 fun MyFriendsList(friends: List<MyFriend>?, onFriendClicked: (MyFriend) -> Unit) {
     val scrollState = rememberScrollState()
 
-    Row(
-        modifier = Modifier
-            .horizontalScroll(scrollState)
-            .padding(8.dp)
-    ) {
-        friends?.forEach { friend ->
-            Column(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
-                    .clickable { onFriendClicked(friend) },
-                horizontalAlignment = Alignment.Start
-            ) {
-                AsyncImage(
-                    model = friend.image,
-                    contentDescription = friend.name,
-                    onError = { error -> println("Error loading image: ${error.result.throwable.message}") },
-                    contentScale = androidx.compose.ui.layout.ContentScale.FillWidth,
+    if (friends.isNullOrEmpty()) {
+        Text(
+            text = "Sorry, no saved friends currently",
+            fontSize = 14.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+    } else {
+        Row(
+            modifier = Modifier
+                .horizontalScroll(scrollState)
+                .padding(8.dp)
+        ) {
+            friends.forEach { friend ->
+                Column(
                     modifier = Modifier
-                        .width(200.dp)
-                        .height(150.dp)
-                        .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
-                        .border(
-                            1.dp,
-                            Color.LightGray,
-                            RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
-                        )
-                )
-                Text(
-                    text = friend.name,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(8.dp)
-                )
+                        .padding(end = 8.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .border(1.dp, Color.DarkGray, RoundedCornerShape(10.dp))
+                        .clickable { onFriendClicked(friend) },
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    AsyncImage(
+                        model = friend.image,
+                        contentDescription = friend.name,
+                        onError = { error -> println("Error loading image: ${error.result.throwable.message}") },
+                        contentScale = androidx.compose.ui.layout.ContentScale.FillWidth,
+                        modifier = Modifier
+                            .width(200.dp)
+                            .height(150.dp)
+                            .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
+                            .border(
+                                1.dp,
+                                Color.LightGray,
+                                RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp)
+                            )
+                    )
+                    Text(
+                        text = friend.name,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
             }
         }
     }
