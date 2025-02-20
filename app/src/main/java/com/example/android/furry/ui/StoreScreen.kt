@@ -4,15 +4,25 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -26,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.api.StoreItem
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreScreen(
     modifier: Modifier = Modifier,
@@ -39,7 +50,59 @@ fun StoreScreen(
     val animals = listOf("All", "Dog", "Cat", "Hamster", "Bird", "Fish")
     val products = listOf("All", "Food", "Toy")
 
+    val searchText by viewModel.searchText.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
+
     Column(modifier = modifier) {
+        SearchBar(
+            query = searchText,//text showed on SearchBar
+            onQueryChange = { viewModel.onSearchTextChanged(it) }, //update the value of searchText
+            onSearch = { viewModel.onSearchChanged(false) }, //the callback to be invoked when the input service triggers the ImeAction.Search action
+            active = isSearching, //whether the user is searching or not
+            onActiveChange = { viewModel.onSearchChanged(it) }, //the callback to be invoked when this search bar's active state is changed
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    tint = MaterialTheme.colorScheme.onSurface,
+                    contentDescription = null
+                )
+            },
+            trailingIcon = {
+                if (searchText.isNotEmpty()) {
+                    IconButton(onClick = {
+                        viewModel.onSearchTextChanged("")
+                        viewModel.onSearchChanged(false)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            contentDescription = "Clear search"
+                        )
+                    }
+                }
+            },
+            windowInsets = WindowInsets(top = 0.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+
+        ) {
+            LazyColumn {
+                items(storeItems ?: listOf()) { item ->
+                    Text(
+                        text = item.name,
+                        modifier = Modifier
+                            .padding(
+                                start = 8.dp,
+                                top = 4.dp,
+                                end = 8.dp,
+                                bottom = 4.dp
+                            )
+                            .clickable { onStoreItemClicked(item) }
+                    )
+                }
+            }
+        }
+
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()
         ) {
