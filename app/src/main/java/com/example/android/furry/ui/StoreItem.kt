@@ -39,7 +39,6 @@ fun StoreItem(item: StoreItem, modifier: Modifier = Modifier) {
             onError = { error -> println("Error loading image: ${error.result.throwable.message}") },
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
-
                 .clip(RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp))
                 .border(
                     1.dp,
@@ -62,7 +61,9 @@ fun StoreItem(item: StoreItem, modifier: Modifier = Modifier) {
             lineHeight = 16.sp,
             overflow = TextOverflow.Ellipsis,
             maxLines = 3,
-            modifier = Modifier.padding(start = 8.dp, top = 8.dp).height(48.dp)
+            modifier = Modifier
+                .padding(start = 8.dp, top = 8.dp)
+                .height(48.dp)
         )
         Text(
             text = "$${item.price}",

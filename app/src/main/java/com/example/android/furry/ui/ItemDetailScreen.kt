@@ -66,7 +66,6 @@ fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier, onAddT
         )
         Button(
             onClick = { onAddToCart(storeItem) },
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
             modifier = Modifier.padding(8.dp)
         ) {
             Text(text = "Add to Cart", color = Color.White)

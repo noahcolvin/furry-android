@@ -29,6 +29,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.android.furry.ui.CartScreen
 import com.example.android.furry.ui.DashboardScreen
 import com.example.android.furry.ui.FurryScreens
 import com.example.android.furry.ui.ItemDetailScreen
@@ -42,12 +43,13 @@ fun FurryAppBar(
     canNavigateBack: Boolean,
     itemCount: Int,
     navigateUp: () -> Unit,
+    onCartClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TopAppBar(
         title = { Text(stringResource(currentScreen.title)) },
         modifier = modifier,
-        actions = { ShoppingCartIcon(itemCount) },
+        actions = { ShoppingCartIcon(itemCount, onClick = onCartClick) },
         navigationIcon = {
             if (canNavigateBack) {
                 IconButton(onClick = navigateUp) {
@@ -63,7 +65,7 @@ fun FurryAppBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ImageAppBar(itemCount: Int) {
+fun ImageAppBar(itemCount: Int, onCartClick: () -> Unit) {
     TopAppBar(
         title = {
             Image(
@@ -73,12 +75,12 @@ fun ImageAppBar(itemCount: Int) {
             )
         },
         actions = {
-            ShoppingCartIcon(itemCount)
+            ShoppingCartIcon(itemCount, onClick = onCartClick)
         })
 }
 
 @Composable
-fun ShoppingCartIcon(itemCount: Int) {
+fun ShoppingCartIcon(itemCount: Int, onClick: () -> Unit) {
     BadgedBox(
         badge = {
             if (itemCount > 0) {
@@ -92,7 +94,7 @@ fun ShoppingCartIcon(itemCount: Int) {
             }
         }
     ) {
-        IconButton(onClick = { }) {
+        IconButton(onClick) {
             Icon(
                 imageVector = Icons.Filled.ShoppingCart,
                 contentDescription = "Localized description",
@@ -119,26 +121,26 @@ fun FurryApp(
         topBar = {
             currentScreen.let {
                 if (it == FurryScreens.Start) {
-                    ImageAppBar(cartItems.size)
+                    ImageAppBar(
+                        cartItems.size,
+                        onCartClick = { navController.navigate(FurryScreens.Cart.name) })
                 } else {
                     FurryAppBar(
                         currentScreen = currentScreen,
                         canNavigateBack = navController.previousBackStackEntry != null,
                         itemCount = cartItems.size,
+                        onCartClick = { navController.navigate(FurryScreens.Cart.name) },
                         navigateUp = { navController.navigateUp() }
                     )
                 }
             }
         }
     ) { innerPadding ->
-        //val uiState by viewModel.uiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = FurryScreens.Start.name,
             modifier = Modifier
                 .fillMaxSize()
-                //.verticalScroll(rememberScrollState())
                 .padding(innerPadding)
         ) {
             composable(route = FurryScreens.Start.name) {
@@ -191,44 +193,20 @@ fun FurryApp(
                         .padding(8.dp)
                 )
             }
-            /*composable(route = FurryScreen.Flavor.name) {
-                val context = LocalContext.current
-                SelectOptionScreen(
-                    subtotal = uiState.price,
-                    onNextButtonClicked = { navController.navigate(FurryScreen.Pickup.name) },
-                    onCancelButtonClicked = {
-                        cancelOrderAndNavigateToStart(viewModel, navController)
+            composable(route = FurryScreens.Cart.name) {
+                CartScreen(
+                    cartItems,
+                    onAddItem = { viewModel.addToCart(it) },
+                    onRemoveItem = { viewModel.removeFromCart(it) },
+                    onCompleteOrder = {
+                        viewModel.completeOrder()
+                        navController.navigate(FurryScreens.Start.name)
                     },
-                    options = DataSource.flavors.map { id -> context.resources.getString(id) },
-                    onSelectionChanged = { viewModel.setFlavor(it) },
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(8.dp)
                 )
             }
-            composable(route = FurryScreen.Pickup.name) {
-                SelectOptionScreen(
-                    subtotal = uiState.price,
-                    onNextButtonClicked = { navController.navigate(FurryScreen.Summary.name) },
-                    onCancelButtonClicked = {
-                        cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    options = uiState.pickupOptions,
-                    onSelectionChanged = { viewModel.setDate(it) },
-                    modifier = Modifier.fillMaxHeight()
-                )
-            }
-            composable(route = FurryScreen.Summary.name) {
-                val context = LocalContext.current
-                OrderSummaryScreen(
-                    orderUiState = uiState,
-                    onCancelButtonClicked = {
-                        cancelOrderAndNavigateToStart(viewModel, navController)
-                    },
-                    onSendButtonClicked = { subject: String, summary: String ->
-                        shareOrder(context, subject = subject, summary = summary)
-                    },
-                    modifier = Modifier.fillMaxHeight()
-                )
-            }*/
         }
     }
 }

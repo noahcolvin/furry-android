@@ -24,6 +24,14 @@ class FurryScreenViewModel : ViewModel() {
         _cartItems.value += storeItem
     }
 
+    fun removeFromCart(storeItem: StoreItem) {
+        _cartItems.value -= storeItem
+    }
+
+    fun completeOrder() {
+        _cartItems.value = emptyList()
+    }
+
     fun setSelectedFriend(friend: MyFriend) {
         _selectedFriend = friend
     }
