@@ -25,6 +25,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,15 +37,23 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.api.StoreItem
 
+fun cleanAnimalFilter(animalFilter: String?): String {
+    return when (animalFilter) {
+        null -> "All"
+        else -> animalFilter.removeSuffix("s")
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreScreen(
     modifier: Modifier = Modifier,
+    animalFilter: String? = null,
     viewModel: StoreScreenViewModel = viewModel(),
     onStoreItemClicked: (StoreItem) -> Unit
 ) {
     val storeItems by viewModel.storeItemsList.collectAsState()
-    var selectedAnimal by remember { mutableStateOf("All") }
+    var selectedAnimal by remember { mutableStateOf(cleanAnimalFilter(animalFilter)) }
     var selectedProduct by remember { mutableStateOf("All") }
 
     val animals = listOf("All", "Dog", "Cat", "Hamster", "Bird", "Fish")
@@ -53,13 +62,21 @@ fun StoreScreen(
     val searchText by viewModel.searchText.collectAsState()
     val isSearching by viewModel.isSearching.collectAsState()
 
+    LaunchedEffect(Unit) {
+        if (selectedAnimal !== "All") {
+            viewModel.getStoreItemsList(selectedAnimal, selectedProduct)
+        } else {
+            viewModel.getStoreItemsList()
+        }
+    }
+
     Column(modifier = modifier) {
         SearchBar(
-            query = searchText,//text showed on SearchBar
-            onQueryChange = { viewModel.onSearchTextChanged(it) }, //update the value of searchText
-            onSearch = { viewModel.onSearchChanged(false) }, //the callback to be invoked when the input service triggers the ImeAction.Search action
-            active = isSearching, //whether the user is searching or not
-            onActiveChange = { viewModel.onSearchChanged(it) }, //the callback to be invoked when this search bar's active state is changed
+            query = searchText,
+            onQueryChange = { viewModel.onSearchTextChanged(it) },
+            onSearch = { viewModel.onSearchChanged(false) },
+            active = isSearching,
+            onActiveChange = { viewModel.onSearchChanged(it) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Search,
@@ -106,11 +123,11 @@ fun StoreScreen(
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()
         ) {
-            Dropdown(animals, "Animals", onSelectCategory = {
+            Dropdown(animals, "Animals", selectedAnimal, onSelectCategory = {
                 selectedAnimal = it
                 viewModel.getStoreItemsList(selectedAnimal, selectedProduct)
             })
-            Dropdown(products, "Products", onSelectCategory = {
+            Dropdown(products, "Products", "All", onSelectCategory = {
                 selectedProduct = it
                 viewModel.getStoreItemsList(selectedAnimal, selectedProduct)
             })
@@ -134,9 +151,14 @@ fun StoreScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Dropdown(categories: List<String>, label: String, onSelectCategory: (String) -> Unit = {}) {
+fun Dropdown(
+    categories: List<String>,
+    label: String,
+    initialCategory: String,
+    onSelectCategory: (String) -> Unit = {}
+) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedCategory by remember { mutableStateOf("All") }
+    var selectedCategory by remember { mutableStateOf(initialCategory) }
 
     val width = LocalConfiguration.current.screenWidthDp.dp / 2f - 20.dp
 

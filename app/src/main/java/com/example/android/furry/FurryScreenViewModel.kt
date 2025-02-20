@@ -1,14 +1,11 @@
 package com.example.android.furry
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.android.furry.api.MyFriend
-import com.example.android.furry.api.RetrofitInstance
 import com.example.android.furry.api.StoreItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 
 class FurryScreenViewModel : ViewModel() {
     private var _selectedFriend: MyFriend? = null
@@ -16,6 +13,9 @@ class FurryScreenViewModel : ViewModel() {
 
     private var _selectedStoreItem: StoreItem? = null
     val selectedStoreItem: StoreItem? get() = _selectedStoreItem
+
+    private var _storeAnimalFilter: String? = null
+    val storeAnimalFilter: String? get() = _storeAnimalFilter
 
     private var _cartItems = MutableStateFlow<List<StoreItem>>(emptyList())
     val cartItems: StateFlow<List<StoreItem>> get() = _cartItems.asStateFlow()
@@ -30,6 +30,10 @@ class FurryScreenViewModel : ViewModel() {
 
     fun completeOrder() {
         _cartItems.value = emptyList()
+    }
+
+    fun setStoreAnimalFilter(animal: String) {
+        _storeAnimalFilter = animal
     }
 
     fun setSelectedFriend(friend: MyFriend) {

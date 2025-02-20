@@ -21,10 +21,6 @@ class StoreScreenViewModel : ViewModel() {
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> get() = _isSearching.asStateFlow()
 
-    init {
-        getStoreItemsList()
-    }
-
     fun onSearchTextChanged(text: String) {
         _searchText.value = text
         getStoreItemsList(search = text)
