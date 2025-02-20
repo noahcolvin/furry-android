@@ -6,24 +6,34 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.android.furry.api.StoreItem
 
 @Composable
 fun MyFavoriteItemsList(storeItems: List<StoreItem>?, onStoreItemClicked: (StoreItem) -> Unit) {
     val scrollState = rememberScrollState()
 
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = Modifier
-            .horizontalScroll(scrollState)
-            .padding(8.dp)
-    ) {
-        storeItems?.forEach { storeItem ->
-            StoreItem(storeItem, Modifier.clickable { onStoreItemClicked(storeItem) })
+    if (storeItems.isNullOrEmpty()) {
+        Text(
+            text = "Sorry, no items available",
+            fontSize = 14.sp,
+            modifier = Modifier.padding(8.dp)
+        )
+    } else {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier
+                .horizontalScroll(scrollState)
+                .padding(8.dp)
+        ) {
+            storeItems.forEach { storeItem ->
+                StoreItem(storeItem, Modifier.clickable { onStoreItemClicked(storeItem) })
+            }
         }
     }
 }
