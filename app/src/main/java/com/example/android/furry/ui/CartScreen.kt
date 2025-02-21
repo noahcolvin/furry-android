@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.android.furry.api.StoreItem
-import java.util.Locale
+import com.example.android.furry.util.formatPrice
 import java.util.SortedMap
 
 const val shipping = 4.95
@@ -120,7 +120,7 @@ fun CartItem(storeItem: StoreItem, count: Int, onAdd: () -> Unit, onRemove: () -
             }
         }
         Text(
-            text = String.format(Locale.US, "$%.2f", storeItem.price * count),
+            text = formatPrice(storeItem.price * count),
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
         )
@@ -155,7 +155,7 @@ fun CartSummary(groupedItems: SortedMap<StoreItem, Int>) {
                 fontWeight = FontWeight.Normal
             )
             Text(
-                text = String.format(Locale.US, "$%.2f", totalAmount),
+                text = formatPrice(totalAmount),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
@@ -172,7 +172,7 @@ fun CartSummary(groupedItems: SortedMap<StoreItem, Int>) {
                 fontWeight = FontWeight.Normal
             )
             Text(
-                text = String.format(Locale.US, "$%.2f", shipping),
+                text = formatPrice(shipping),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
@@ -189,7 +189,7 @@ fun CartSummary(groupedItems: SortedMap<StoreItem, Int>) {
                 fontWeight = FontWeight.Normal
             )
             Text(
-                text = String.format(Locale.US, "$%.2f", tax),
+                text = formatPrice(tax),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
@@ -206,7 +206,7 @@ fun CartSummary(groupedItems: SortedMap<StoreItem, Int>) {
                 fontWeight = FontWeight.Normal
             )
             Text(
-                text = String.format(Locale.US, "$%.2f", totalAmount + shipping + tax),
+                text = formatPrice(totalAmount + shipping + tax),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal
             )
