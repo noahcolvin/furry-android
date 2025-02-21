@@ -36,25 +36,19 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.android.furry.api.StoreItem
-
-fun cleanAnimalFilter(animalFilter: String?): String {
-    return when (animalFilter) {
-        null -> "All"
-        else -> animalFilter.removeSuffix("s")
-    }
-}
+import com.example.android.furry.domain.StoreItem
+import com.example.android.furry.util.allIfNullRemoveTrailingS
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StoreScreen(
     modifier: Modifier = Modifier,
     animalFilter: String? = null,
-    viewModel: StoreScreenViewModel = viewModel(),
+    viewModel: StoreScreenViewModel = viewModel(factory = StoreScreenViewModel.Factory),
     onStoreItemClicked: (StoreItem) -> Unit
 ) {
     val storeItems by viewModel.storeItemsList.collectAsState()
-    var selectedAnimal by remember { mutableStateOf(cleanAnimalFilter(animalFilter)) }
+    var selectedAnimal by remember { mutableStateOf(allIfNullRemoveTrailingS(animalFilter)) }
     var selectedProduct by remember { mutableStateOf("All") }
 
     val animals = listOf("All", "Dog", "Cat", "Hamster", "Bird", "Fish")

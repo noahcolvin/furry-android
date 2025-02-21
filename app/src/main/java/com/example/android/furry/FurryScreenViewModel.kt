@@ -1,8 +1,8 @@
 package com.example.android.furry
 
 import androidx.lifecycle.ViewModel
-import com.example.android.furry.api.MyFriend
-import com.example.android.furry.api.StoreItem
+import com.example.android.furry.domain.MyFriend
+import com.example.android.furry.domain.StoreItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

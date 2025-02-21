@@ -25,8 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.android.furry.R
-import com.example.android.furry.api.MyFriend
-import com.example.android.furry.api.StoreItem
+import com.example.android.furry.domain.MyFriend
+import com.example.android.furry.domain.StoreItem
 
 @Composable
 fun DashboardScreen(
@@ -35,7 +35,7 @@ fun DashboardScreen(
     onStoreItemClicked: (StoreItem) -> Unit,
     onStoreAreaClick: (FurryScreens) -> Unit,
     onAnimalClicked: (String) -> Unit,
-    viewModel: DashboardScreenViewModel = viewModel(),
+    viewModel: DashboardScreenViewModel = viewModel(factory = DashboardScreenViewModel.Factory),
 ) {
     val friends by viewModel.friendsList.collectAsState()
     val favorites by viewModel.favoritesList.collectAsState()

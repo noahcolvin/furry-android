@@ -21,7 +21,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.android.furry.api.MyFriend
+import com.example.android.furry.domain.MyFriend
 
 @Composable
 fun MyFriendsList(friends: List<MyFriend>?, onFriendClicked: (MyFriend) -> Unit) {

@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.android.furry.api.StoreItem
+import com.example.android.furry.domain.StoreItem
 
 @Composable
 fun MyFavoriteItemsList(storeItems: List<StoreItem>?, onStoreItemClicked: (StoreItem) -> Unit) {

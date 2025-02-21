@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.android.furry.api.MyFriend
+import com.example.android.furry.domain.MyFriend
 
 @Composable
 fun MyFriendScreen(friend: MyFriend, modifier: Modifier = Modifier) {
