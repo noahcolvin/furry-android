@@ -12,6 +12,12 @@ This is a native [Android](https://developer.android.com/) project created with 
 - Cart page
 - Item search
 
+## Screenshots
+![Dashboard](screenshots/Dashboard.png)
+![Item Detail](screenshots/ItemDetail.png)
+![Store](screenshots/Store.png)
+![Cart](screenshots/Cart.png)
+
 ## How to run
 
 - Install [Android Studio](https://developer.android.com/studio) and open the project.
@@ -31,6 +37,9 @@ I made one in [Flutter](https://github.com/noahcolvin/furry_flutter) and [React 
 
 #### Why isn't there much here?
 This is just a starting point. I wanted to keep it simple and not include too many features. This is a good starting point for a full application.
+
+#### This isn't very pretty
+Sure, but also I'm not a designer. Rest assured, I will not be taking any design jobs.
 
 #### Where is the backend?
 There are a few, currently:
