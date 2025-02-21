@@ -36,7 +36,7 @@ I created this project to demonstrate creating a simple mobile app in Android.
 I made one in [Flutter](https://github.com/noahcolvin/furry_flutter) and [React Native](https://github.com/noahcolvin/furry-rn) too!
 
 #### Why isn't there much here?
-This is just a starting point. I wanted to keep it simple and not include too many features. This is a good starting point for a full application.
+This is just a starting point. I wanted to keep it simple and not include too many features.
 
 #### This isn't very pretty
 Sure, but also I'm not a designer. Rest assured, I will not be taking any design jobs.
