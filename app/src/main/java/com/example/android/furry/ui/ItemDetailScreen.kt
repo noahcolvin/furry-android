@@ -21,7 +21,11 @@ import com.gowtham.ratingbar.RatingBar
 import com.gowtham.ratingbar.RatingBarStyle
 
 @Composable
-fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier, onAddToCart: (StoreItem) -> Unit) {
+fun ItemDetailScreen(
+    storeItem: StoreItem,
+    modifier: Modifier = Modifier,
+    onAddToCart: (StoreItem) -> Unit
+) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         Text(
             text = storeItem.name,
@@ -69,19 +73,21 @@ fun ItemDetailScreen(storeItem: StoreItem, modifier: Modifier = Modifier, onAddT
         ) {
             Text(text = "Add to Cart", color = Color.White)
         }
-        Text(
-            text = "About",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(8.dp)
-        )
-        storeItem.about.forEach { about ->
+        if (storeItem.about.isNotEmpty()) {
             Text(
-                text = "• $about",
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.padding(top = 2.dp, start = 8.dp, end = 8.dp)
+                text = "About",
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(8.dp)
             )
+            storeItem.about.forEach { about ->
+                Text(
+                    text = "• $about",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.padding(top = 2.dp, start = 8.dp, end = 8.dp)
+                )
+            }
         }
     }
 }
