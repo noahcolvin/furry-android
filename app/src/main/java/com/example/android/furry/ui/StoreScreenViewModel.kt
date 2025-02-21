@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.android.furry.api.ApiService
 import com.example.android.furry.api.RetrofitInstance
-import com.example.android.furry.api.StoreItem
+import com.example.android.furry.domain.StoreItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

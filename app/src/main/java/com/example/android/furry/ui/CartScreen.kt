@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import com.example.android.furry.api.StoreItem
+import com.example.android.furry.domain.StoreItem
 import com.example.android.furry.util.formatPrice
 import java.util.SortedMap
 
